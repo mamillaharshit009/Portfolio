@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sai Harshit Mamilla — Java Full Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#02040a;color:#fff;font-family:'Outfit',sans-serif;overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:rgba(0,229,255,.3)}
+
+/* CURSOR */
+#cur{position:fixed;width:8px;height:8px;background:#00e5ff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;top:0;left:0}
+#cur2{position:fixed;width:38px;height:38px;border:1px solid rgba(0,229,255,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);top:0;left:0}
+
+/* CANVAS */
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* KEYFRAMES */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.1}}
+@keyframes gp{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes f1{0%,100%{transform:rotate(3deg) translateY(0)}50%{transform:rotate(3deg) translateY(-8px)}}
+@keyframes f2{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(-2deg) translateY(-6px)}}
+@keyframes f3{0%,100%{transform:rotate(1.5deg) translateY(0)}50%{transform:rotate(1.5deg) translateY(-10px)}}
+
+/* NAV */
+nav.main-nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.2rem 5vw;display:flex;align-items:center;justify-content:space-between;background:rgba(2,4,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,229,255,.15)}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:3px;color:#00e5ff;cursor:none}
+.logo em{color:#fff;font-style:normal}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:2px;color:#c8d4e8;text-decoration:none;text-transform:uppercase;transition:color .25s;cursor:none;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:#00e5ff;transition:width .3s}
+.nav-links a:hover{color:#00e5ff}
+.nav-links a:hover::after{width:100%}
+.nav-cta{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:2px;padding:.55rem 1.3rem;border:1px solid #00e5ff;color:#00e5ff;text-decoration:none;text-transform:uppercase;transition:all .3s;cursor:none}
+.nav-cta:hover{background:#00e5ff;color:#02040a}
+
+/* SCROLL DOTS */
+.scroll-dots{position:fixed;right:1rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.8rem;z-index:400}
+.sdot{width:5px;height:5px;border-radius:3px;background:#5a6a8a;transition:all .3s;cursor:pointer}
+.sdot.active{height:20px;background:#00e5ff;box-shadow:0 0 8px #00e5ff}
+
+/* SECTION BASE */
+section{position:relative;z-index:1}
+.s-inner{max-width:1200px;margin:0 auto}
+.s-pad{padding:8rem 5vw}
+.s-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:5px;color:#00e5ff;text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;gap:1rem}
+.s-eyebrow::before{content:'';display:block;width:30px;height:1px;background:#00e5ff}
+.s-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,4vw,3.8rem);letter-spacing:2px;line-height:1;color:#fff;margin-bottom:4rem}
+.s-title em{color:#00e5ff;font-style:normal}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:0 5vw;overflow:hidden}
+.hero-bg-text{position:absolute;bottom:-2%;left:50%;transform:translateX(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,15vw,200px);color:transparent;-webkit-text-stroke:1px rgba(0,229,255,.04);white-space:nowrap;pointer-events:none;user-select:none;letter-spacing:8px}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;max-width:1200px;width:100%;padding-top:4rem}
+.hero-badge{display:inline-flex;align-items:center;gap:.6rem;background:rgba(57,255,20,.06);border:1px solid rgba(57,255,20,.2);padding:.35rem 1rem;margin-bottom:1.8rem}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#39ff14;box-shadow:0 0 8px #39ff14;animation:gp 2s infinite}
+.hero-badge span{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:3px;color:#39ff14;text-transform:uppercase}
+.hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,6.5rem);line-height:.93;letter-spacing:2px;margin-bottom:1rem}
+.hero-name .ln1{display:block;color:#fff}
+.hero-name .ln2{display:block;color:#00e5ff;text-shadow:0 0 60px rgba(0,229,255,.3)}
+.hero-role{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:#fff;margin-bottom:1.5rem;min-height:1.4rem;font-weight:500}
+.hero-role .cblink{display:inline-block;width:2px;height:1em;background:#00e5ff;margin-left:2px;animation:blink .8s infinite;vertical-align:middle}
+.hero-desc{font-size:1rem;color:#e8eef8;line-height:1.85;max-width:480px;margin-bottom:2rem;font-weight:400}
+.hero-pills{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:2.2rem}
+.hero-pill{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.3rem .8rem;background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.18);color:#e0eaf8}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-main{padding:.9rem 2.2rem;background:#00e5ff;color:#02040a;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;font-weight:700;box-shadow:0 0 30px rgba(0,229,255,.25);transition:all .3s;text-decoration:none;display:inline-block}
+.btn-main:hover{background:#02040a;color:#00e5ff;box-shadow:0 0 50px rgba(0,229,255,.4)}
+.btn-ghost{padding:.9rem 2.2rem;background:transparent;border:1px solid rgba(0,229,255,.35);color:#fff;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
+.btn-ghost:hover{border-color:#00e5ff;color:#00e5ff}
+
+/* FLOAT CARDS */
+.hero-right{position:relative;height:400px}
+.hcard{position:absolute;background:#0b1120;padding:1.6rem;cursor:none}
+.hcard:nth-child(1){width:240px;right:0;top:0;border:1px solid rgba(0,229,255,.25);animation:f1 4s ease-in-out infinite}
+.hcard:nth-child(2){width:255px;right:40px;top:95px;border:1px solid rgba(240,180,41,.25);animation:f2 4.5s ease-in-out infinite}
+.hcard:nth-child(3){width:235px;right:80px;top:195px;border:1px solid rgba(57,255,20,.25);animation:f3 5s ease-in-out infinite}
+.hcard-label{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:3px;color:#00e5ff;margin-bottom:.8rem;text-transform:uppercase}
+.hcard-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:1;margin-bottom:.3rem}
+.hcard-desc{font-size:.72rem;color:#dde8f8;line-height:1.55}
+
+/* ABOUT */
+#about{background:linear-gradient(180deg,#02040a,#070b14)}
+.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:start}
+.about-text p{font-size:.97rem;color:#e8eef8;line-height:1.9;margin-bottom:1.2rem}
+.about-text p strong{color:#fff;font-weight:600}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem}
+.stat-box{background:#0b1120;border:1px solid rgba(0,229,255,.18);padding:1.4rem;transition:all .3s}
+.stat-box:hover{border-color:rgba(0,229,255,.4);transform:translateY(-3px)}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;color:#00e5ff;line-height:1;margin-bottom:.3rem}
+.stat-key{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:2px;color:#c8d8f0;text-transform:uppercase}
+.info-cards{display:flex;flex-direction:column;gap:1rem}
+.info-card{background:#0b1120;border:1px solid rgba(0,229,255,.18);border-left-width:3px;padding:1.5rem 1.8rem}
+.info-card-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:.5rem}
+.info-card-val{font-size:.95rem;color:#fff;font-weight:600}
+.info-card-sub{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:#c8d8f0;margin-top:.3rem}
+
+/* SKILLS */
+#skills{background:#070b14}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.sk-card{background:#0b1120;border:1px solid rgba(0,229,255,.18);padding:2rem;transition:all .35s;position:relative;overflow:hidden}
+.sk-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#00e5ff,#00b4d8);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.sk-card:hover{border-color:rgba(0,229,255,.4);transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.sk-card:hover::after{transform:scaleX(1)}
+.sk-icon{font-size:1.4rem;margin-bottom:1rem}
+.sk-name{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;color:#fff;margin-bottom:1rem}
+.sk-tags{display:flex;flex-wrap:wrap;gap:0}
+.sk-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.28rem .7rem;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.22);color:#e8f4ff;margin:2px;transition:all .2s}
+.sk-tag:hover{background:rgba(0,229,255,.2);border-color:#00e5ff;color:#fff}
+
+/* EXPERIENCE */
+#experience{background:#02040a}
+.exp-timeline{border-left:1px solid rgba(0,229,255,.2);padding-left:2px}
+.exp-entry{padding-left:3rem;padding-bottom:4rem;position:relative}
+.exp-entry:last-child{padding-bottom:0}
+.exp-entry::before{content:'';position:absolute;left:-5px;top:6px;width:11px;height:11px;border-radius:50%;background:#00e5ff;box-shadow:0 0 18px #00e5ff}
+.exp-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.8rem}
+.exp-co{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:3px;color:#fff}
+.exp-role{font-size:.88rem;color:#00e5ff;font-weight:500;margin-bottom:.2rem}
+.exp-loc{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#c8d4e8;letter-spacing:2px}
+.exp-badge{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;padding:.45rem 1.1rem;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.3);color:#00e5ff;white-space:nowrap;align-self:flex-start}
+.exp-points{list-style:none}
+.exp-points li{font-size:.88rem;color:#dce6f5;line-height:1.75;padding:.45rem 0 .45rem 1.4rem;position:relative;border-bottom:1px solid rgba(255,255,255,.04)}
+.exp-points li:last-child{border-bottom:none}
+.exp-points li::before{content:'→';position:absolute;left:0;color:#00e5ff;font-size:.65rem;top:.55rem}
+.metric{display:inline-block;background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.3);color:#f0b429;font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.1rem .45rem;margin-left:.3rem;vertical-align:middle}
+
+/* PROJECTS */
+#projects{background:#070b14}
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.proj-card{background:#0b1120;border:1px solid rgba(0,229,255,.12);padding:2.5rem;position:relative;overflow:hidden;transition:all .3s}
+.proj-card:hover{border-color:rgba(0,229,255,.3);background:#0f1628}
+.proj-no{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:rgba(0,229,255,.05);position:absolute;top:1rem;right:1.5rem;line-height:1;pointer-events:none}
+.proj-cat{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:3px;color:#00e5ff;text-transform:uppercase;margin-bottom:1rem}
+.proj-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;color:#fff;margin-bottom:.9rem;line-height:1.1}
+.proj-desc{font-size:.84rem;color:#dce6f5;line-height:1.75;margin-bottom:1.4rem}
+.proj-stack{display:flex;flex-wrap:wrap}
+.proj-tag{font-family:'JetBrains Mono',monospace;font-size:.55rem;padding:.22rem .65rem;background:rgba(123,94,167,.12);border:1px solid rgba(123,94,167,.3);color:#c4b5fd;margin:2px}
+
+/* EDUCATION */
+#education{background:#02040a;padding:5rem 5vw;border-top:1px solid rgba(0,229,255,.15);border-bottom:1px solid rgba(0,229,255,.15)}
+.edu-wrap{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.edu-card{background:#0b1120;border:1px solid rgba(0,229,255,.18);padding:3rem;position:relative;overflow:hidden}
+.edu-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00e5ff,#00b4d8,transparent)}
+.edu-deg{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:2px;margin-bottom:.4rem;line-height:1.1}
+.edu-school{font-size:1rem;color:#00e5ff;font-weight:500;margin-bottom:.3rem}
+.edu-place{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#c8d4e8;letter-spacing:2px;margin-bottom:1.8rem}
+.edu-gpa{font-family:'Bebas Neue',sans-serif;font-size:4.5rem;color:#f0b429;line-height:1}
+.edu-gpa-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#c8d4e8;letter-spacing:2px;text-transform:uppercase;margin-top:.3rem}
+.edu-date{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#e0eaf8;margin-top:1.4rem;letter-spacing:2px}
+.edu-quote{padding:2.5rem;background:#0b1120;border:1px solid rgba(0,229,255,.18);border-left:3px solid #00e5ff}
+.edu-quote p{font-size:1.05rem;color:#fff;line-height:1.8;font-style:italic;margin-bottom:1rem}
+.edu-quote span{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#c8d4e8}
+
+/* CONTACT */
+#contact{background:#070b14;padding:8rem 5vw}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.contact-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.5rem);line-height:.95;letter-spacing:2px;margin-bottom:1.8rem}
+.contact-heading em{color:#00e5ff;font-style:normal;display:block}
+.contact-sub{font-size:.97rem;color:#dce6f8;line-height:1.85;margin-bottom:2rem}
+.contact-email-line{display:block;font-family:'JetBrains Mono',monospace;font-size:.88rem;color:#fff;text-decoration:none;padding:1.3rem 0;border-top:1px solid rgba(0,229,255,.18);border-bottom:1px solid rgba(0,229,255,.18);margin-bottom:1.5rem;transition:color .3s}
+.contact-email-line:hover{color:#00e5ff}
+.contact-links{display:flex;flex-direction:column;gap:1rem}
+.contact-link{display:flex;align-items:center;gap:1.4rem;background:#0b1120;border:1px solid rgba(0,229,255,.18);border-left-width:3px;padding:1.4rem 1.8rem;text-decoration:none;transition:transform .25s,background .25s;cursor:none}
+.contact-link:hover{transform:translateX(6px);background:#0f1628}
+.cl-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid}
+.cl-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:.3rem}
+.cl-val{font-size:.92rem;color:#fff;font-weight:600;margin-bottom:.2rem}
+.cl-hint{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#c8d8f0}
+
+/* FOOTER */
+footer{background:#02040a;border-top:1px solid rgba(0,229,255,.15);padding:1.8rem 5vw;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.footer-copy{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#c8d4e8;letter-spacing:2px}
+.footer-copy em{color:#00e5ff;font-style:normal}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#c8d4e8;text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color .3s;cursor:none}
+.footer-links a:hover{color:#00e5ff}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav.main-nav{padding:1rem 4vw}
+  .nav-links{display:none}
+  .hero-inner,.about-grid,.edu-wrap,.contact-grid{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .skills-grid{grid-template-columns:1fr 1fr}
+  .proj-grid{grid-template-columns:1fr}
+  .scroll-dots{display:none}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+<canvas id="bgc"></canvas>
+
+<!-- NAV -->
+<nav class="main-nav">
+  <div class="logo">SHM<em>.</em></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:saiharshitm02@gmail.com" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- SCROLL DOTS -->
+<div class="scroll-dots">
+  <div class="sdot active" data-sec="hero"></div>
+  <div class="sdot" data-sec="about"></div>
+  <div class="sdot" data-sec="skills"></div>
+  <div class="sdot" data-sec="experience"></div>
+  <div class="sdot" data-sec="projects"></div>
+  <div class="sdot" data-sec="contact"></div>
+</div>
+
+<!-- ═══════ HERO ═══════ -->
+<section id="hero">
+  <div class="hero-bg-text">FULL STACK</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>Open to opportunities</span>
+      </div>
+      <h1 class="hero-name">
+        <span class="ln1">SAI HARSHIT</span>
+        <span class="ln2">MAMILLA</span>
+      </h1>
+      <p class="hero-role"><span id="typed"></span><span class="cblink"></span></p>
+      <p class="hero-desc">Java Full Stack Developer with <strong>4+ years</strong> building enterprise-grade, cloud-native applications. Expert in Spring Boot microservices, React frontends &amp; AWS deployments.</p>
+      <div class="hero-pills">
+        <span class="hero-pill">Cincinnati, OH</span>
+        <span class="hero-pill">+1 (513)-293-1325</span>
+        <span class="hero-pill">MS IT — 3.97 GPA</span>
+        <span class="hero-pill">State Street</span>
+      </div>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-main">Get In Touch</a>
+        <a href="#projects" class="btn-ghost">View Projects</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hcard">
+        <div class="hcard-label">Delivery Speed</div>
+        <div class="hcard-num" style="color:#00e5ff">35%</div>
+        <div class="hcard-desc">Faster delivery via Jenkins CI/CD + Docker pipeline automation</div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-label">Latency Reduced</div>
+        <div class="hcard-num" style="color:#f0b429">30%</div>
+        <div class="hcard-desc">Backend latency cut via Spring Boot microservice optimization</div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-label">Dev Efficiency</div>
+        <div class="hcard-num" style="color:#39ff14">25%</div>
+        <div class="hcard-desc">Productivity boost via CoPilot &amp; AI-assisted coding tools</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ ABOUT ═══════ -->
+<section id="about" class="s-pad">
+  <div class="s-inner">
+    <div class="s-eyebrow">01 — Profile</div>
+    <h2 class="s-title">Who I <em>Am</em></h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm a <strong>Java Full Stack Developer</strong> with 4+ years of hands-on experience designing, developing, and shipping high-performance applications from microservices backends to pixel-perfect React frontends.</p>
+        <p>At <strong>State Street, USA</strong>, I build scalable distributed systems with Spring Boot, optimize REST APIs at enterprise scale, and drive CI/CD automation. Previously at <strong>Citius Tech, India</strong>, I shipped full-stack healthcare and enterprise web apps that moved the needle on performance and engagement.</p>
+        <p>I approach software with a <strong>systems-first mindset</strong> deeply invested in both the correctness of backend logic and the quality of user-facing interfaces.</p>
+        <div class="about-stats">
+          <div class="stat-box"><div class="stat-val">4+</div><div class="stat-key">Years Building</div></div>
+          <div class="stat-box"><div class="stat-val">2</div><div class="stat-key">Companies</div></div>
+          <div class="stat-box"><div class="stat-val">3.97</div><div class="stat-key">GPA (MS IT)</div></div>
+          <div class="stat-box"><div class="stat-val">30%</div><div class="stat-key">Avg Perf Gain</div></div>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card" style="border-left-color:#00e5ff">
+          <div class="info-card-label" style="color:#00e5ff">Location</div>
+          <div class="info-card-val">Cincinnati, OH, USA</div>
+        </div>
+        <div class="info-card" style="border-left-color:#f0b429">
+          <div class="info-card-label" style="color:#f0b429">Current Employer</div>
+          <div class="info-card-val">State Street, USA</div>
+          <div class="info-card-sub">Jan 2025 — Present</div>
+        </div>
+        <div class="info-card" style="border-left-color:#a78bfa">
+          <div class="info-card-label" style="color:#a78bfa">Education</div>
+          <div class="info-card-val">MS Information Technology</div>
+          <div class="info-card-sub">University of Cincinnati · GPA 3.97/4.0</div>
+        </div>
+        <div class="info-card" style="border-left-color:#39ff14">
+          <div class="info-card-label" style="color:#39ff14">Contact</div>
+          <div class="info-card-val">saiharshitm02@gmail.com</div>
+          <div class="info-card-sub">+1 (513)-293-1325</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SKILLS ═══════ -->
+<section id="skills" class="s-pad">
+  <div class="s-inner">
+    <div class="s-eyebrow">02 — Arsenal</div>
+    <h2 class="s-title">Tech <em>Stack</em></h2>
+    <div class="skills-grid">
+      <div class="sk-card">
+        <div class="sk-icon">⚙️</div><div class="sk-name">Backend</div>
+        <div class="sk-tags">
+          <span class="sk-tag">Spring Boot</span><span class="sk-tag">Spring MVC</span><span class="sk-tag">Microservices</span><span class="sk-tag">Spring Security</span><span class="sk-tag">Core Java</span><span class="sk-tag">Java 8/11</span><span class="sk-tag">Hibernate</span><span class="sk-tag">JPA</span><span class="sk-tag">JSF</span><span class="sk-tag">JAX-WS</span><span class="sk-tag">Servlets</span><span class="sk-tag">JSP</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-icon">🎨</div><div class="sk-name">Frontend</div>
+        <div class="sk-tags">
+          <span class="sk-tag">React.js</span><span class="sk-tag">Angular.js</span><span class="sk-tag">Vue.js</span><span class="sk-tag">Node.js</span><span class="sk-tag">TypeScript</span><span class="sk-tag">JavaScript</span><span class="sk-tag">HTML5</span><span class="sk-tag">CSS3</span><span class="sk-tag">Bootstrap</span><span class="sk-tag">jQuery</span><span class="sk-tag">Ajax</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-icon">☁️</div><div class="sk-name">Cloud & DevOps</div>
+        <div class="sk-tags">
+          <span class="sk-tag">AWS EC2</span><span class="sk-tag">S3</span><span class="sk-tag">VPC</span><span class="sk-tag">CloudFront</span><span class="sk-tag">ELB</span><span class="sk-tag">Redshift</span><span class="sk-tag">Jenkins</span><span class="sk-tag">Docker</span><span class="sk-tag">Azure</span><span class="sk-tag">GCP</span><span class="sk-tag">SonarQube</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-icon">🗄️</div><div class="sk-name">Databases</div>
+        <div class="sk-tags">
+          <span class="sk-tag">MySQL</span><span class="sk-tag">PostgreSQL</span><span class="sk-tag">SQL Server</span><span class="sk-tag">Oracle</span><span class="sk-tag">MongoDB</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-icon">🛠️</div><div class="sk-name">Tools & APIs</div>
+        <div class="sk-tags">
+          <span class="sk-tag">REST APIs</span><span class="sk-tag">SOAP</span><span class="sk-tag">Swagger</span><span class="sk-tag">Maven</span><span class="sk-tag">Gradle</span><span class="sk-tag">Git</span><span class="sk-tag">JUnit</span><span class="sk-tag">JMeter</span><span class="sk-tag">Jira</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-icon">💡</div><div class="sk-name">Methodology</div>
+        <div class="sk-tags">
+          <span class="sk-tag">Agile / Scrum</span><span class="sk-tag">SDLC</span><span class="sk-tag">Waterfall</span><span class="sk-tag">CI/CD</span><span class="sk-tag">Microservices Arch</span><span class="sk-tag">API Gateway</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ EXPERIENCE ═══════ -->
+<section id="experience" class="s-pad">
+  <div class="s-inner">
+    <div class="s-eyebrow">03 — Career</div>
+    <h2 class="s-title">Work <em>History</em></h2>
+    <div class="exp-timeline">
+
+      <div class="exp-entry">
+        <div class="exp-header">
+          <div>
+            <div class="exp-co">State Street</div>
+            <div class="exp-role">Java Full Stack Developer</div>
+            <div class="exp-loc">USA</div>
+          </div>
+          <div class="exp-badge">Jan 2025 — Present</div>
+        </div>
+        <ul class="exp-points">
+          <li>Developed interactive React.js, HTML5, and CSS3 front-end interfaces, enhancing usability with visually appealing responsive designs.</li>
+          <li>Deployed scalable Spring Boot microservices with REST APIs, reducing response latency by <span class="metric">30% ↓ Latency</span></li>
+          <li>Optimized microservices communication via message queues, API Gateways, and AWS VPC ensuring high throughput and fault tolerance.</li>
+          <li>Leveraged CoPilot and AI-assisted coding tools to enhance development efficiency by <span class="metric">25% ↑ Efficiency</span></li>
+          <li>Implemented Jenkins CI/CD pipelines across Java and React apps, reducing deployment time by <span class="metric">30% ↓ Deploy Time</span></li>
+          <li>Integrated Jenkins with Maven, Git, and Docker, achieving <span class="metric">35% ↑ Delivery Speed</span> faster delivery cycle.</li>
+        </ul>
+      </div>
+
+      <div class="exp-entry">
+        <div class="exp-header">
+          <div>
+            <div class="exp-co">Citius Tech</div>
+            <div class="exp-role">Java Full Stack Developer</div>
+            <div class="exp-loc">India</div>
+          </div>
+          <div class="exp-badge">Aug 2020 — Nov 2023</div>
+        </div>
+        <ul class="exp-points">
+          <li>Built reusable Angular.js components and custom filters, reducing dev time across projects by <span class="metric">30% ↓ Dev Time</span></li>
+          <li>Integrated RESTful APIs with Spring Boot and Bootstrap front-end, improving user engagement by <span class="metric">30% ↑ Engagement</span></li>
+          <li>Developed responsive interfaces with HTML5, CSS3, JavaScript, React, and Vue, improving UX by <span class="metric">20% ↑ UX</span></li>
+          <li>Built Spring MVC applications with dependency injection, achieving <span class="metric">25% ↑ Performance</span> improvement.</li>
+          <li>Designed scalable AWS EC2 deployments, optimizing resource utilization by <span class="metric">30% ↑ Efficiency</span></li>
+          <li>Implemented Swagger/OpenAPI documentation improving developer onboarding by <span class="metric">30% ↑ Onboarding</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PROJECTS ═══════ -->
+<section id="projects" class="s-pad">
+  <div class="s-inner">
+    <div class="s-eyebrow">04 — Portfolio</div>
+    <h2 class="s-title">Featured <em>Projects</em></h2>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="proj-no">01</div>
+        <div class="proj-cat">Backend Architecture</div>
+        <div class="proj-title">Enterprise Microservices Platform</div>
+        <div class="proj-desc">Scalable Spring Boot microservices with API Gateway, message queues, and AWS VPC. 30% response latency reduction with fault-tolerant distributed system design.</div>
+        <div class="proj-stack"><span class="proj-tag">Spring Boot</span><span class="proj-tag">AWS VPC</span><span class="proj-tag">API Gateway</span><span class="proj-tag">Docker</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-no">02</div>
+        <div class="proj-cat">Full Stack</div>
+        <div class="proj-title">Financial Dashboard — State Street</div>
+        <div class="proj-desc">Interactive React.js dashboards integrated with Spring Boot REST APIs for real-time enterprise data visualization with 30% latency improvement.</div>
+        <div class="proj-stack"><span class="proj-tag">React.js</span><span class="proj-tag">Spring Boot</span><span class="proj-tag">REST API</span><span class="proj-tag">TypeScript</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-no">03</div>
+        <div class="proj-cat">DevOps</div>
+        <div class="proj-title">CI/CD Pipeline Automation</div>
+        <div class="proj-desc">End-to-end Jenkins, Maven, Git, and Docker pipelines. Reduced deployment cycles by 35% and eliminated manual release errors across Java and React environments.</div>
+        <div class="proj-stack"><span class="proj-tag">Jenkins</span><span class="proj-tag">Maven</span><span class="proj-tag">Docker</span><span class="proj-tag">SonarQube</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-no">04</div>
+        <div class="proj-cat">Frontend Engineering</div>
+        <div class="proj-title">Angular Healthcare App</div>
+        <div class="proj-desc">Modular Angular.js platform with reusable components. Improved cross-browser compatibility and cut development time by 30% across all modules.</div>
+        <div class="proj-stack"><span class="proj-tag">Angular.js</span><span class="proj-tag">Spring MVC</span><span class="proj-tag">Bootstrap</span><span class="proj-tag">PostgreSQL</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-no">05</div>
+        <div class="proj-cat">Cloud Infrastructure</div>
+        <div class="proj-title">AWS Cloud Deployment Suite</div>
+        <div class="proj-desc">Multi-region AWS deployments with EC2, S3, CloudFront, ELB, and Redshift. Optimized resource utilization by 30% with high availability and automatic fault recovery.</div>
+        <div class="proj-stack"><span class="proj-tag">AWS EC2</span><span class="proj-tag">S3</span><span class="proj-tag">CloudFront</span><span class="proj-tag">ELB</span><span class="proj-tag">Redshift</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-no">06</div>
+        <div class="proj-cat">API Platform</div>
+        <div class="proj-title">Swagger API Documentation Hub</div>
+        <div class="proj-desc">Comprehensive RESTful API documentation with Swagger/OpenAPI integrated with SonarQube, improving developer onboarding efficiency by 30%.</div>
+        <div class="proj-stack"><span class="proj-tag">Swagger</span><span class="proj-tag">Spring Boot</span><span class="proj-tag">SonarQube</span><span class="proj-tag">JAX-WS</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ EDUCATION ═══════ -->
+<section id="education">
+  <div class="edu-wrap">
+    <div class="edu-card">
+      <div class="edu-deg">Master of Science<br>in Information Technology</div>
+      <div class="edu-school">University of Cincinnati</div>
+      <div class="edu-place">Cincinnati, OH, USA</div>
+      <div class="edu-gpa">3.97</div>
+      <div class="edu-gpa-label">GPA / 4.0</div>
+      <div class="edu-date">// Graduated May 2025</div>
+    </div>
+    <div class="edu-quote">
+      <p>"Excellence is not a destination but a continuous journey. A 3.97 GPA alongside enterprise-level work experience demonstrates not just academic ability, but a relentless commitment to mastery."</p>
+      <span>— Sai Harshit Mamilla</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CONTACT ═══════ -->
+<section id="contact">
+  <div class="s-inner">
+    <div class="s-eyebrow" style="margin-bottom:.8rem">05 — Connect</div>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-heading">Let's<em>Build.</em></div>
+        <p class="contact-sub">Currently open to full-time roles, contract work, and interesting collaborations. If you're working on something impactful, I'd love to be part of it.</p>
+        <a href="mailto:saiharshitm02@gmail.com" class="contact-email-line">saiharshitm02@gmail.com</a>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#c8d4e8;letter-spacing:2px">// Available for new opportunities</div>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:saiharshitm02@gmail.com" class="contact-link" style="border-left-color:#00e5ff">
+          <div class="cl-icon" style="background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.3)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div><div class="cl-label" style="color:#00e5ff">Email</div><div class="cl-val">saiharshitm02@gmail.com</div><div class="cl-hint">Opens your email client</div></div>
+        </a>
+        <a href="https://linkedin.com/in/" target="_blank" class="contact-link" style="border-left-color:#0a66c2">
+          <div class="cl-icon" style="background:rgba(10,102,194,.15);border-color:rgba(10,102,194,.4)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a66c2" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <div><div class="cl-label" style="color:#0a66c2">LinkedIn</div><div class="cl-val">Connect & view full profile</div><div class="cl-hint">Open Linkedin profile</div></div>
+        </a>
+        <a href="https://github.com/mamillaharshit009" target="_blank" class="contact-link" style="border-left-color:#8b949e">
+          <div class="cl-icon" style="background:rgba(139,148,158,.15);border-color:rgba(139,148,158,.4)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </div>
+          <div><div class="cl-label" style="color:#8b949e">GitHub</div><div class="cl-val">github.com/mamillaharshit009</div><div class="cl-hint">Browse repositories & code</div></div>
+        </a>
+        <a href="tel:+15132931325" class="contact-link" style="border-left-color:#39ff14">
+          <div class="cl-icon" style="background:rgba(57,255,20,.1);border-color:rgba(57,255,20,.3)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39ff14" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.17-1.17a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div><div class="cl-label" style="color:#39ff14">Phone</div><div class="cl-val">+1 (513) 293-1325</div><div class="cl-hint">Call or text anytime</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-copy">© 2025 <em>Sai Harshit Mamilla</em> — All rights reserved</span>
+  <div class="footer-links">
+    <a href="#hero">Top</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){cx+=(mx-cx)*.13;cy+=(my-cy)*.13;cur2.style.left=cx+'px';cur2.style.top=cy+'px';requestAnimationFrame(loop)})();
+
+// CANVAS
+const canvas=document.getElementById('bgc'),ctx=canvas.getContext('2d');
+let W,H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+const pts=Array.from({length:75},()=>({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38,r:Math.random()*1.3+.4,a:Math.random()*.35+.12}));
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(0,229,255,0.022)';ctx.lineWidth=.5;
+  for(let x=0;x<W;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+  for(let y=0;y<H;y+=80){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(0,229,255,${p.a})`;ctx.fill()});
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const d=Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y);if(d<120){ctx.beginPath();ctx.strokeStyle=`rgba(0,229,255,${.07*(1-d/120)})`;ctx.lineWidth=.4;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke()}}
+  requestAnimationFrame(draw);
+}
+draw();
+
+// TYPING
+const el=document.getElementById('typed');
+const phrases=['Java Full Stack Developer','Spring Boot Architect','React.js Engineer','AWS Cloud Specialist','CI/CD Automation Expert'];
+let pi=0,ci=0,del=false;
+function type(){
+  el.textContent=del?phrases[pi].slice(0,ci-1):phrases[pi].slice(0,ci+1);
+  if(!del)ci++;else ci--;
+  if(ci===phrases[pi].length&&!del){del=true;setTimeout(type,2000);return}
+  if(ci===0&&del){del=false;pi=(pi+1)%phrases.length}
+  setTimeout(type,del?38:62);
+}
+setTimeout(type,900);
+
+// SCROLL DOTS
+const secs=['hero','about','skills','experience','projects','contact'];
+const dots=document.querySelectorAll('.sdot');
+window.addEventListener('scroll',()=>{
+  for(let i=secs.length-1;i>=0;i--){
+    const el=document.getElementById(secs[i]);
+    if(el&&el.getBoundingClientRect().top<=150){dots.forEach((d,j)=>d.classList.toggle('active',i===j));break}
+  }
+});
+
+// SMOOTH SCROLL for logo
+document.querySelector('.logo').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+</script>
+</body>
+</html>
